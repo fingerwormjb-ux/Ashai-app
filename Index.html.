@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ashai's Legal Prep & Encouragement Coach</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #FDFBF7; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .animate-breathe { animation: breathe 8s infinite ease-in-out; }
+    @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.35); opacity: 1; } }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen">
+  <div class="max-w-md mx-auto min-h-screen flex flex-col bg-[#FDFBF7] shadow-lg border-x border-amber-100">
+    
+    <!-- Header -->
+    <header class="bg-emerald-800 text-amber-50 p-4 text-center rounded-b-2xl shadow-sm">
+      <h1 class="text-xl font-semibold tracking-wide">Ashai's Legal Prep & Coach</h1>
+      <p class="text-xs text-emerald-200 mt-1">Grounding, Preparation & NSW Rights Assurances</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="flex justify-around bg-emerald-900/10 p-2 m-2 rounded-xl text-xs font-medium text-emerald-900">
+      <button onclick="switchTab('coach')" id="tab-coach" class="px-3 py-2 rounded-lg bg-emerald-700 text-white shadow">Coach</button>
+      <button onclick="switchTab('checklist')" id="tab-checklist" class="px-3 py-2 rounded-lg hover:bg-emerald-100">Checklist</button>
+      <button onclick="switchTab('timeline')" id="tab-timeline" class="px-3 py-2 rounded-lg hover:bg-emerald-100">Timeline</button>
+      <button onclick="switchTab('rights')" id="tab-rights" class="px-3 py-2 rounded-lg hover:bg-emerald-100">Legal Rights</button>
+      <button onclick="switchTab('breathe')" id="tab-breathe" class="px-3 py-2 rounded-lg hover:bg-emerald-100">Breathe</button>
+    </nav>
+
+    <!-- Content Area -->
+    <main class="flex-1 p-4 overflow-y-auto">
+      
+      <!-- TAB 1: COACH -->
+      <div id="content-coach" class="space-y-4">
+        <div id="chat-messages" class="space-y-3 max-h-[350px] overflow-y-auto p-2 border border-emerald-100 rounded-xl bg-white">
+          <div class="p-3 bg-white border border-emerald-100 rounded-2xl text-sm leading-relaxed text-slate-700">
+            Hello Ashai. I am your practical legal preparation assistant tool. I am here to help you break down tasks into easy 2-minute steps and organize your case. Remember, God is your strength and comfort, and I am here to assist you with facts and organization whenever you feel ready.
+          </div>
+        </div>
+
+        <div class="flex gap-1 overflow-x-auto pb-1 text-xs">
+          <button onclick="sendQuickMsg('What Spirit means to me')" class="bg-amber-100 text-amber-900 px-3 py-1.5 rounded-full whitespace-nowrap">What Spirit means to me</button>
+          <button onclick="sendQuickMsg('How do I start sorting 3 papers from the bag?')" class="bg-purple-100 text-purple-900 px-3 py-1.5 rounded-full whitespace-nowrap">Sort 3 Papers From Bag</button>
+          <button onclick="sendQuickMsg('Explain HRIPA 2002 medical audit trails')" class="bg-blue-100 text-blue-900 px-3 py-1.5 rounded-full whitespace-nowrap">Hospital Record Rights</button>
+        </div>
+
+        <div class="flex gap-2">
+          <input type="text" id="chat-input" placeholder="Ask your coach or type a thought..." class="flex-1 border border-emerald-200 rounded-xl px-3 py-2 text-sm focus:outline-none bg-white">
+          <button onclick="sendMessage()" class="bg-emerald-800 text-white px-4 py-2 rounded-xl text-sm font-medium">Send</button>
+        </div>
+      </div>
+
+      <!-- TAB 2: CHECKLIST -->
+      <div id="content-checklist" class="hidden space-y-4">
+        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+          <h2 class="text-sm font-semibold text-emerald-900">Your Action Micro-Steps</h2>
+          <p class="text-xs text-emerald-700 mt-1">Every small action builds your foundation. Completing even one micro-task is a victory.</p>
+        </div>
+        <div class="space-y-2" id="checklist-items">
+          <label class="p-3 bg-white border border-slate-200 rounded-xl flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" class="w-4 h-4 accent-emerald-700">
+            <div><span class="text-xs text-amber-800 font-bold block">The Bag</span><span class="text-sm">Pull out 3 random documents from the file bag</span></div>
+          </label>
+          <label class="p-3 bg-white border border-slate-200 rounded-xl flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" class="w-4 h-4 accent-emerald-700">
+            <div><span class="text-xs text-amber-800 font-bold block">The Bag</span><span class="text-sm">Group papers by date or hospital vs police</span></div>
+          </label>
+          <label class="p-3 bg-white border border-slate-200 rounded-xl flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" class="w-4 h-4 accent-emerald-700">
+            <div><span class="text-xs text-amber-800 font-bold block">Legal Preparation</span><span class="text-sm">Save Lawyer / Legal Aid numbers in phone contacts</span></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- TAB 3: TIMELINE -->
+      <div id="content-timeline" class="hidden space-y-4">
+        <div class="bg-amber-50 border border-amber-200/60 p-3 rounded-xl border-l-4 border-l-amber-600">
+          <span class="text-[10px] text-amber-800 font-bold block">Emergency Event</span>
+          <h4 class="text-sm font-semibold text-slate-800">Ambulance called to Forster for baby</h4>
+          <p class="text-xs text-slate-600 mt-1">Police arrived alongside ambulance. Hospital transfer occurred without mother.</p>
+        </div>
+        <div class="bg-amber-50 border border-amber-200/60 p-3 rounded-xl border-l-4 border-l-amber-600">
+          <span class="text-[10px] text-amber-800 font-bold block">Morning After</span>
+          <h4 class="text-sm font-semibold text-slate-800">Search Warrant Executed</h4>
+          <p class="text-xs text-slate-600 mt-1">Police arrived, left, and returned with revised time slot. Papers seized.</p>
+        </div>
+      </div>
+
+      <!-- TAB 4: LEGAL RIGHTS -->
+      <div id="content-rights" class="hidden space-y-4">
+        <div class="bg-white border border-slate-200 p-4 rounded-xl space-y-2">
+          <h3 class="text-sm font-bold text-emerald-900">1. Right to Silence (LEPRA 2002)</h3>
+          <p class="text-xs text-slate-700 leading-relaxed">Under the <em>Law Enforcement Act 2002</em>, you maintain an absolute right to remain silent when questioned by police.</p>
+        </div>
+        <div class="bg-white border border-slate-200 p-4 rounded-xl space-y-2">
+          <h3 class="text-sm font-bold text-emerald-900">2. Medical Audit Trails (HRIPA 2002)</h3>
+          <p class="text-xs text-slate-700 leading-relaxed">Under the <em>Health Records Act 2002</em>, any retroactive alterations (e.g., 34 to 38 weeks) are logged in digital EMR metadata.</p>
+        </div>
+      </div>
+
+      <!-- TAB 5: BREATHE -->
+      <div id="content-breathe" class="hidden text-center space-y-6 pt-8">
+        <div class="w-36 h-36 mx-auto bg-emerald-200/50 rounded-full flex items-center justify-center animate-breathe border-4 border-emerald-400">
+          <span class="text-xs font-medium text-emerald-900 uppercase">Breathe</span>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl max-w-xs mx-auto">
+          <p class="text-sm italic text-slate-800">"Be still, and know that I am God."</p>
+          <span class="text-xs font-bold text-amber-800 mt-1 block">— Psalm 46:10</span>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="p-3 text-center text-[10px] text-slate-400 border-t border-slate-100">
+      Ashai's Personal Support & Case Tool
+    </footer>
+
+  </div>
+
+  <script>
+    function switchTab(tabName) {
+      ['coach', 'checklist', 'timeline', 'rights', 'breathe'].forEach(t => {
+        document.getElementById('content-' + t).classList.add('hidden');
+        document.getElementById('tab-' + t).className = 'px-3 py-2 rounded-lg hover:bg-emerald-100';
+      });
+      document.getElementById('content-' + tabName).classList.remove('hidden');
+      document.getElementById('tab-' + tabName).className = 'px-3 py-2 rounded-lg bg-emerald-700 text-white shadow';
+    }
+
+    function sendQuickMsg(txt) {
+      document.getElementById('chat-input').value = txt;
+      sendMessage();
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const chat = document.getElementById('chat-messages');
+      chat.innerHTML += `<div class="p-3 bg-emerald-700 text-white rounded-2xl text-sm leading-relaxed ml-auto max-w-[85%]">${val}</div>`;
+      input.value = '';
+      chat.scrollTop = chat.scrollHeight;
+
+      setTimeout(() => {
+        let resp = "You are taking clear, proactive steps today. Let's focus on just one small thing at a time.";
+        if (val.toLowerCase().includes('spirit') || val.toLowerCase().includes('god')) {
+          resp = "God provides strength when things feel overwhelming. Whenever you feel ready, we can tackle just one document or one thought together.";
+        } else if (val.toLowerCase().includes('bag') || val.toLowerCase().includes('paper')) {
+          resp = "Sorting the file bag doesn't have to be done all at once. Try taking just 3 papers out today and see what dates are on them.";
+        }
+        chat.innerHTML += `<div class="p-3 bg-white border border-emerald-100 rounded-2xl text-sm leading-relaxed text-slate-700 max-w-[85%]">${resp}</div>`;
+        chat.scrollTop = chat.scrollHeight;
+      }, 500);
+    }
+  </script>
+</body>
+</html>

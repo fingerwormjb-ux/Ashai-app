@@ -1,290 +1,376 @@
-```html
-<!-- Chosen Palette: Warm Earth & Sage Harmony (Background: #FAF6F0, Text: #334155, Primary Emerald: #065f46 / #047857, Warm Amber: #b45309) -->
-<!-- Application Structure Plan: The SPA is designed as a mobile-first legal preparation and emotional grounding companion for Ashai. Rather than a dense legal manual, the application uses a 6-tab hub: 1. Coach (interactive grounding chat & prompt engine for stress management), 2. Legal Rights (plain-English statutory guides covering NSW LEPRA search warrants, HRIPA 2002 metadata audit trails, Bail Act s77 protocols, and Subpoenas vs GIPA), 3. Inspire (dynamic rolling quote system), 4. Steps & Readiness (interactive checklist with a Chart.js progress tracker), 5. Timeline Log (fact tracker backed by browser localStorage), and 6. Calm (1-minute breathing visualizer). This structure ensures instant access to legal protections and stress relief. -->
-<!-- Visualization & Content Choices: 1. Preparation Progress -> Goal: Track Actionable Micro-Steps -> Presentation: Chart.js Doughnut Chart -> Interaction: Toggle tasks to update canvas visualizer dynamically -> Justification: Gives immediate visual affirmation of progress to combat freeze/procrastination -> Method: Chart.js Canvas. 2. Statutory Legal Cards -> Goal: Accessible Rights -> Presentation: Styled CSS HTML cards with clear action steps -> Method: Vanilla JS Tab Switching. 3. Evidence Logger -> Goal: Retain Fact Timelines -> Presentation: Dynamic list stored in localStorage -> Method: Vanilla JS DOM manipulation. CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ashai's Preparation & Legal Rights Companion</title>
-  <!-- Tailwind CSS CDN -->
+  <title>Ashai's Preparation & Encouragement Companion</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { 
-      background-color: #FAF6F0; 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-    }
-    .animate-breathe { 
-      animation: breathe 8s infinite ease-in-out; 
-    }
+    body { background-color: #FAF6F0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .animate-breathe { animation: breathe 8s infinite ease-in-out; }
     @keyframes breathe {
       0%, 100% { transform: scale(1); opacity: 0.85; }
-      50% { transform: scale(1.22); opacity: 1; }
-    }
-    .chart-container {
-      position: relative;
-      width: 100%;
-      max-width: 280px;
-      margin-left: auto;
-      margin-right: auto;
-      height: 180px;
-      max-height: 200px;
+      50% { transform: scale(1.25); opacity: 1; }
     }
   </style>
 </head>
 <body class="text-slate-700 antialiased min-h-screen">
 
-  <!-- Main Mobile Frame Container -->
-  <div class="max-w-md mx-auto min-h-screen flex flex-col bg-[#FAF6F0] shadow-xl border-x border-amber-100/60">
+  <div class="max-w-md mx-auto min-h-screen flex flex-col bg-[#FAF6F0] shadow-md border-x border-amber-100/60">
 
     <!-- Soft Header -->
-    <header class="bg-gradient-to-b from-amber-100/80 to-emerald-50/60 p-5 text-center rounded-b-3xl border-b border-amber-100/80">
-      <h1 class="text-xl font-bold tracking-wide text-emerald-950">Ashai's Support Space</h1>
-      <p class="text-xs text-emerald-800/90 mt-1 font-medium">Grounding, Truth & NSW Legal Preparation</p>
+    <header class="bg-gradient-to-b from-amber-100/70 to-emerald-50/50 p-5 text-center rounded-b-3xl border-b border-amber-100">
+      <h1 class="text-xl font-medium tracking-wide text-emerald-950">Ashai's Support Space</h1>
+      <p class="text-xs text-emerald-800/80 mt-1">Grounding, Truth & NSW Legal Preparation</p>
     </header>
 
     <!-- Navigation Bar -->
-    <nav class="flex justify-around bg-emerald-900/5 p-1.5 m-3 rounded-2xl text-[11px] font-semibold text-emerald-900 border border-emerald-900/10">
-      <button onclick="switchTab('coach')" id="tab-coach" class="px-2 py-2 rounded-xl bg-emerald-800 text-white shadow-sm transition-all">Coach</button>
-      <button onclick="switchTab('rights')" id="tab-rights" class="px-2 py-2 rounded-xl hover:bg-emerald-100/50 transition-all">Legal Rights</button>
-      <button onclick="switchTab('quotes')" id="tab-quotes" class="px-2 py-2 rounded-xl hover:bg-emerald-100/50 transition-all">Inspire</button>
-      <button onclick="switchTab('checklist')" id="tab-checklist" class="px-2 py-2 rounded-xl hover:bg-emerald-100/50 transition-all">Steps</button>
-      <button onclick="switchTab('timeline')" id="tab-timeline" class="px-2 py-2 rounded-xl hover:bg-emerald-100/50 transition-all">Timeline</button>
-      <button onclick="switchTab('breathe')" id="tab-breathe" class="px-2 py-2 rounded-xl hover:bg-emerald-100/50 transition-all">Calm</button>
+    <nav class="flex justify-around bg-emerald-900/5 p-1.5 m-3 rounded-2xl text-xs font-medium text-emerald-900">
+      <button onclick="switchTab('coach')" id="tab-coach" class="px-2 py-2 rounded-xl bg-emerald-800 text-white shadow-sm">Coach</button>
+      <button onclick="switchTab('rights')" id="tab-rights" class="px-2 py-2 rounded-xl hover:bg-emerald-100/50">Legal Rights</button>
+      <button onclick="switchTab('quotes')" id="tab-quotes" class="px-2 py-2 rounded-xl hover:bg-emerald-100/50">Inspire</button>
+      <button onclick="switchTab('checklist')" id="tab-checklist" class="px-2 py-2 rounded-xl hover:bg-emerald-100/50">Steps</button>
+      <button onclick="switchTab('timeline')" id="tab-timeline" class="px-2 py-2 rounded-xl hover:bg-emerald-100/50">Timeline</button>
+      <button onclick="switchTab('breathe')" id="tab-breathe" class="px-2 py-2 rounded-xl hover:bg-emerald-100/50">Calm</button>
     </nav>
 
-    <!-- Main Dynamic Content Container -->
+    <!-- Content Area -->
     <main class="flex-1 p-4 overflow-y-auto">
 
       <!-- TAB 1: COACH -->
-      <section id="content-coach" class="space-y-4">
-        <div class="bg-emerald-50/80 p-3 rounded-2xl border border-emerald-200 text-xs text-emerald-900 leading-relaxed">
-          <strong>Purpose:</strong> Use this interactive companion whenever you feel overwhelmed, stuck, or need instant clarity on your legal steps and rights.
-        </div>
-
-        <div id="chat-messages" class="space-y-3 max-h-[340px] overflow-y-auto p-3 border border-emerald-100 rounded-2xl bg-white/90 shadow-sm">
-          <div class="p-3 bg-white border border-emerald-100 rounded-2xl text-xs leading-relaxed text-slate-700">
-            Welcome back, Ashai. I am here to help you stay grounded and focused on objective facts. Remember: You don't need to prove your heart to anyone—you only need to present the clear facts for your children and your future.
+      <div id="content-coach" class="space-y-4">
+        <div id="chat-messages" class="space-y-3 max-h-[360px] overflow-y-auto p-3 border border-emerald-100 rounded-2xl bg-white/80 shadow-sm">
+          <div class="p-3 bg-white border border-emerald-100 rounded-2xl text-sm leading-relaxed text-slate-700">
+            Welcome back, Ashai. I am here to help you stay grounded and focused on the facts. Remember: You don't need to prove your heart to anyone—you only need to present the objective truth clearly for your children and your future.
           </div>
         </div>
 
-        <!-- Quick Action Buttons -->
-        <div class="flex gap-1.5 overflow-x-auto pb-1 text-[11px]">
-          <button onclick="sendQuickMsg('I am feeling stuck and overwhelmed right now.')" class="bg-rose-50 text-rose-800 px-3 py-1.5 rounded-full border border-rose-200 shrink-0 font-medium hover:bg-rose-100">I'm procrastinating / stuck</button>
-          <button onclick="sendQuickMsg('What does Spirit mean for my case?')" class="bg-amber-50 text-amber-900 px-3 py-1.5 rounded-full border border-amber-200 shrink-0 font-medium hover:bg-amber-100">Spirit & Hope</button>
-          <button onclick="sendQuickMsg('Explain HRIPA 2002 medical audit trails')" class="bg-emerald-50 text-emerald-900 px-3 py-1.5 rounded-full border border-emerald-200 shrink-0 font-medium hover:bg-emerald-100">HRIPA Metadata</button>
+        <div class="flex gap-1.5 overflow-x-auto pb-1 text-xs">
+          <button onclick="sendQuickMsg('I am feeling stuck and overwhelmed right now.')" class="bg-rose-50 text-rose-800 px-3 py-1.5 rounded-full border border-rose-200 shrink-0">I'm procrastinating / stuck</button>
+          <button onclick="sendQuickMsg('What does Spirit mean for my case?')" class="bg-amber-50 text-amber-900 px-3 py-1.5 rounded-full border border-amber-200 shrink-0">Spirit & Hope</button>
+          <button onclick="sendQuickMsg('Explain HRIPA 2002 medical audit trails')" class="bg-emerald-50 text-emerald-900 px-3 py-1.5 rounded-full border border-emerald-200 shrink-0">HRIPA Metadata</button>
         </div>
 
         <div class="flex gap-2">
-          <input type="text" id="chat-input" placeholder="Ask a question or type a message..." class="flex-1 border border-emerald-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600 bg-white shadow-inner">
-          <button onclick="sendMessage()" class="bg-emerald-800 text-white px-4 py-2 rounded-xl text-xs font-medium hover:bg-emerald-900 shadow-sm">Send</button>
+          <input type="text" id="chat-input" placeholder="Type a message or question..." class="flex-1 border border-emerald-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white">
+          <button onclick="sendMessage()" class="bg-emerald-800 text-white px-4 py-2 rounded-xl text-sm hover:bg-emerald-900">Send</button>
         </div>
-      </section>
+      </div>
 
-      <!-- TAB 2: LEGAL RIGHTS & NSW LAW -->
-      <section id="content-rights" class="hidden space-y-4">
+      <!-- TAB 2: LEGAL RIGHTS -->
+      <div id="content-rights" class="hidden space-y-4">
         <div class="bg-emerald-50/80 p-4 rounded-2xl border border-emerald-200 text-center">
-          <h2 class="text-sm font-bold text-emerald-950 mb-1">NSW Legal Rights & Protections</h2>
-          <p class="text-[11px] text-emerald-800">Clear, accessible guides on statutory rights, search warrants, and evidence preservation.</p>
+          <h2 class="text-sm font-semibold text-emerald-950 mb-1">NSW Legal Rights & Protections</h2>
+          <p class="text-xs text-emerald-800/80">Clear, accessible explanations of statutory rights and legal procedures governing your case.</p>
         </div>
 
         <div class="space-y-3 text-xs">
-          
-          <!-- Card 1: Right to Silence -->
           <div class="p-3.5 bg-white border border-slate-200 rounded-2xl shadow-sm space-y-1.5">
             <div class="flex justify-between items-center">
-              <span class="font-bold text-emerald-950 text-xs">Right to Silence & Police Interviews</span>
-              <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-semibold">LEPRA / Common Law</span>
+              <span class="font-bold text-emerald-900 text-sm">Right to Silence & Police Interviews</span>
+              <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-semibold">Common Law / LEPRA</span>
             </div>
-            <p class="text-slate-600 leading-relaxed">
-              <strong>What it means:</strong> You are under no legal obligation to participate in a "voluntary" police interview or answer police questions without your lawyer present.
-            </p>
-            <p class="text-slate-500 leading-relaxed bg-slate-50 p-2 rounded-xl border border-slate-100">
-              <strong>What to do:</strong> State clearly: <em>"I am seeking legal advice and will not participate in an interview or answer questions without my lawyer present."</em>
-            </p>
+            <p class="text-slate-600 leading-relaxed"><strong>What it means:</strong> You are under no legal obligation to participate in a "voluntary" police interview or answer questions without your lawyer present[span_3](start_span)[span_3](end_span).</p>
+            <p class="text-slate-500 leading-relaxed"><strong>What to do:</strong> State clearly: <em>"I am seeking legal advice and will not participate in an interview without my lawyer present."</em>[span_4](start_span)[span_4](end_span)</p>
           </div>
 
-          <!-- Card 2: HRIPA Metadata & Medical Records -->
           <div class="p-3.5 bg-white border border-slate-200 rounded-2xl shadow-sm space-y-1.5">
             <div class="flex justify-between items-center">
-              <span class="font-bold text-emerald-950 text-xs">Hospital EMR Metadata Audit Trails</span>
+              <span class="font-bold text-emerald-900 text-sm">Hospital Record Metadata Audit Trails</span>
               <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-semibold">HRIPA 2002 (NSW)</span>
             </div>
-            <p class="text-slate-600 leading-relaxed">
-              <strong>What it means:</strong> Electronic Medical Records (EMR) generate permanent digital audit logs whenever entries (such as gestational age or weight) are edited.
-            </p>
-            <p class="text-slate-500 leading-relaxed bg-slate-50 p-2 rounded-xl border border-slate-100">
-              <strong>What to do:</strong> Instruct your legal representative to subpoena the hospital's EMR Audit Trail/Metadata to verify exact user IDs and timestamps of alterations.
-            </p>
+            <p class="text-slate-600 leading-relaxed"><strong>What it means:</strong> Electronic Medical Records (EMR) generate an unchangeable digital audit log whenever entries (gestational age, weight, or diagnoses) are edited[span_5](start_span)[span_5](end_span).</p>
+            <p class="text-slate-500 leading-relaxed"><strong>What to do:</strong> Instruct your lawyer to subpoena the EMR Audit Trail/Metadata from the hospital to verify the exact user ID, date, and timestamp of any alterations[span_6](start_span)[span_6](end_span).</p>
           </div>
 
-          <!-- Card 3: Search Warrants -->
           <div class="p-3.5 bg-white border border-slate-200 rounded-2xl shadow-sm space-y-1.5">
             <div class="flex justify-between items-center">
-              <span class="font-bold text-emerald-950 text-xs">Search Warrant Limits & Timeframes</span>
+              <span class="font-bold text-emerald-900 text-sm">Search Warrant Rules & Limits</span>
               <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-semibold">LEPRA 2002 (NSW)</span>
             </div>
-            <p class="text-slate-600 leading-relaxed">
-              <strong>What it means:</strong> Police can only search for items authorized by the issuing Magistrate and within specified time limits. Seizing out-of-scope files or unauthorized extensions can render evidence inadmissible.
-            </p>
-            <p class="text-slate-500 leading-relaxed bg-slate-50 p-2 rounded-xl border border-slate-100">
-              <strong>What to do:</strong> Subpoena the original Warrant Application and Police Execution Log to challenge improperly seized evidence under s138 Evidence Act 1995.
-            </p>
+            <p class="text-slate-600 leading-relaxed"><strong>What it means:</strong> Police can only search for items authorized by the issuing Magistrate and within specified timeframes[span_7](start_span)[span_7](end_span). Seizing unrelated paperwork can make evidence inadmissible[span_8](start_span)[span_8](end_span).</p>
+            <p class="text-slate-500 leading-relaxed"><strong>What to do:</strong> Subpoena the original Warrant Application and Police Execution Log to challenge improperly seized material under Section 138 of the Evidence Act 1995[span_9](start_span)[span_9](end_span).</p>
           </div>
 
-          <!-- Card 4: Subpoenas vs. GIPA -->
           <div class="p-3.5 bg-white border border-slate-200 rounded-2xl shadow-sm space-y-1.5">
             <div class="flex justify-between items-center">
-              <span class="font-bold text-emerald-950 text-xs">Subpoenas vs. Freedom of Info (GIPA)</span>
+              <span class="font-bold text-emerald-900 text-sm">Subpoenas vs. Freedom of Info (GIPA)</span>
               <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-semibold">NSW Court Rules</span>
             </div>
-            <p class="text-slate-600 leading-relaxed">
-              <strong>What it means:</strong> Court subpoenas legally compel agencies (police, hospitals, 000 dispatch) to produce complete logs directly to court registry. Administrative GIPA requests are often refused during active court cases.
-            </p>
-            <p class="text-slate-500 leading-relaxed bg-slate-50 p-2 rounded-xl border border-slate-100">
-              <strong>What to do:</strong> Rely on court-issued subpoenas rather than general access applications to avoid administrative delays.
-            </p>
+            <p class="text-slate-600 leading-relaxed"><strong>What it means:</strong> Court-issued subpoenas are legally binding orders forcing agencies to produce complete logs directly to the court registry[span_10](start_span)[span_10](end_span).</p>
+            <p class="text-slate-500 leading-relaxed"><strong>What to do:</strong> Use court subpoenas rather than general access requests (GIPA), as police routinely refuse administrative requests during active prosecutions[span_11](start_span)[span_11](end_span).</p>
           </div>
-
         </div>
-      </section>
+      </div>
 
-      <!-- TAB 3: QUOTES -->
-      <section id="content-quotes" class="hidden space-y-4">
+      <!-- TAB 3: QUOTES (100+ Wisdom Expressions) -->
+      <div id="content-quotes" class="hidden space-y-4">
         <div class="bg-amber-50/70 p-4 rounded-2xl border border-amber-200/60 text-center">
-          <h2 class="text-sm font-bold text-amber-950 mb-1">Words of Strength & Wisdom</h2>
-          <p class="text-[11px] text-amber-800">Grounding insights from leaders, thinkers, and sacred tradition.</p>
+          <h2 class="text-sm font-semibold text-amber-950 mb-1">Words of Strength & Wisdom</h2>
+          <p class="text-xs text-amber-800/80">100+ rolling insights from history, leaders, and sacred tradition.</p>
         </div>
 
-        <div id="quote-display" class="p-5 bg-white border border-emerald-100 rounded-2xl shadow-sm space-y-3 min-h-[140px] flex flex-col justify-center">
-          <p id="quote-text" class="text-xs italic text-slate-700 leading-relaxed">"There is no greater warrior than a mother protecting her child."</p>
-          <p id="quote-author" class="text-[11px] font-semibold text-emerald-800 text-right">— N.K. Jemisin</p>
+        <div id="quote-display" class="p-5 bg-white border border-emerald-100 rounded-2xl shadow-sm space-y-3 min-h-[150px] flex flex-col justify-center">
+          <p id="quote-text" class="text-sm italic text-slate-700 leading-relaxed">"There is no greater warrior than a mother protecting her child."</p>
+          <p id="quote-author" class="text-xs font-semibold text-emerald-800 text-right">— N.K. Jemisin</p>
         </div>
 
         <div class="flex gap-2">
-          <button onclick="nextQuote()" class="flex-1 bg-emerald-800 text-white py-2.5 rounded-xl text-xs font-medium hover:bg-emerald-900 shadow-sm">Next Quote</button>
-          <button onclick="fetchMoreQuotes()" id="fetch-btn" class="bg-amber-100 text-amber-900 px-4 py-2.5 rounded-xl text-xs font-medium border border-amber-200 hover:bg-amber-200">Expand List (+5)</button>
+          <button onclick="nextQuote()" class="flex-1 bg-emerald-800 text-white py-2.5 rounded-xl text-xs font-medium hover:bg-emerald-900">Next Quote</button>
+          <button onclick="prevQuote()" class="bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-xs font-medium hover:bg-slate-300">Previous</button>
         </div>
-      </section>
+        <p id="quote-counter" class="text-center text-[11px] text-slate-400 font-medium">Quote 1 of 100</p>
+      </div>
 
-      <!-- TAB 4: CHECKLIST & READINESS CHART -->
-      <section id="content-checklist" class="hidden space-y-4">
-        <div class="bg-emerald-50/60 p-4 rounded-2xl border border-emerald-100 text-center">
-          <h2 class="text-sm font-bold text-emerald-950">Action Micro-Steps</h2>
-          <p class="text-[11px] text-emerald-800 mt-0.5">Take one tiny step at a time to build undeniable case clarity.</p>
-        </div>
-
-        <!-- Chart.js Visualization Container -->
-        <div class="bg-white p-3 border border-emerald-100 rounded-2xl shadow-sm text-center">
-          <span class="text-xs font-bold text-emerald-900 block mb-2">Preparation Completion Progress</span>
-          <div class="chart-container">
-            <canvas id="progressChart"></canvas>
-          </div>
+      <!-- TAB 4: CHECKLIST -->
+      <div id="content-checklist" class="hidden space-y-4">
+        <div class="bg-emerald-50/60 p-4 rounded-2xl border border-emerald-100">
+          <h2 class="text-sm font-semibold text-emerald-950">Action Micro-Steps</h2>
+          <p class="text-xs text-emerald-800 mt-1">One tiny step at a time builds undeniable proof.</p>
         </div>
 
         <div class="space-y-2 text-xs" id="checklist-items">
-          <label class="p-3 bg-white border border-slate-200 rounded-xl flex items-center gap-3 cursor-pointer shadow-sm hover:border-emerald-300 transition-all">
-            <input type="checkbox" onchange="toggleStep(0)" id="chk-0" class="w-4 h-4 accent-emerald-700">
-            <div><span class="font-bold block text-emerald-900">Document Organization</span>Pull out just 3 papers to check dates and timestamps.</div>
+          <label class="p-3 bg-white border border-slate-200 rounded-xl flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" class="w-4 h-4 accent-emerald-700">
+            <div><span class="font-semibold block text-emerald-900">The File Bag</span>Pull out just 3 papers to check dates.</div>
           </label>
-          <label class="p-3 bg-white border border-slate-200 rounded-xl flex items-center gap-3 cursor-pointer shadow-sm hover:border-emerald-300 transition-all">
-            <input type="checkbox" onchange="toggleStep(1)" id="chk-1" class="w-4 h-4 accent-emerald-700">
-            <div><span class="font-bold block text-emerald-900">Lawyer Communication</span>Save primary solicitor contacts on phone speed dial.</div>
+          <label class="p-3 bg-white border border-slate-200 rounded-xl flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" class="w-4 h-4 accent-emerald-700">
+            <div><span class="font-semibold block text-emerald-900">Legal Preparation</span>Save lawyer contact numbers on phone home screen.</div>
           </label>
-          <label class="p-3 bg-white border border-slate-200 rounded-xl flex items-center gap-3 cursor-pointer shadow-sm hover:border-emerald-300 transition-all">
-            <input type="checkbox" onchange="toggleStep(2)" id="chk-2" class="w-4 h-4 accent-emerald-700">
-            <div><span class="font-bold block text-emerald-900">Grounding Routine</span>Complete 1 minute of deep breathing before checking court docs.</div>
-          </label>
-          <label class="p-3 bg-white border border-slate-200 rounded-xl flex items-center gap-3 cursor-pointer shadow-sm hover:border-emerald-300 transition-all">
-            <input type="checkbox" onchange="toggleStep(3)" id="chk-3" class="w-4 h-4 accent-emerald-700">
-            <div><span class="font-bold block text-emerald-900">Fact Log Entry</span>Log at least 1 key date in your local timeline.</div>
+          <label class="p-3 bg-white border border-slate-200 rounded-xl flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" class="w-4 h-4 accent-emerald-700">
+            <div><span class="font-semibold block text-emerald-900">Grounding</span>Complete a 1-minute breathing cycle before opening court docs.</div>
           </label>
         </div>
-      </section>
+      </div>
 
-      <!-- TAB 5: TIMELINE LOG -->
-      <section id="content-timeline" class="hidden space-y-4">
+      <!-- TAB 5: TIMELINE -->
+      <div id="content-timeline" class="hidden space-y-4">
         <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200/60">
-          <h2 class="text-sm font-bold text-amber-950">Fact-Based Case Log</h2>
-          <p class="text-[11px] text-amber-900/80">Stored locally on your phone. Keep strict records of events and dates.</p>
+          <h2 class="text-sm font-semibold text-amber-950">Fact-Based Case Log</h2>
+          <p class="text-xs text-amber-900/80">Saved locally on your phone. Record exact dates, times, and occurrences.</p>
         </div>
 
         <div class="space-y-2">
-          <input type="date" id="event-date" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
-          <textarea id="event-desc" placeholder="Describe the factual occurrence..." class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-white h-20 focus:outline-none focus:ring-1 focus:ring-emerald-500"></textarea>
-          <button onclick="addTimelineEvent()" class="w-full bg-emerald-800 text-white py-2 rounded-xl text-xs font-medium hover:bg-emerald-900 shadow-sm">Save Event to Phone</button>
+          <input type="date" id="event-date" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-white">
+          <textarea id="event-desc" placeholder="Describe the factual event..." class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-white h-20"></textarea>
+          <button onclick="addTimelineEvent()" class="w-full bg-emerald-800 text-white py-2 rounded-xl text-xs hover:bg-emerald-900">Save Event</button>
         </div>
 
         <div id="timeline-list" class="space-y-2 text-xs"></div>
-      </section>
+      </div>
 
-      <!-- TAB 6: CALM -->
-      <section id="content-breathe" class="hidden text-center py-8 space-y-6">
+      <!-- TAB 6: BREATHE (CALM + AUDIO BOWL SOUND) -->
+      <div id="content-breathe" class="hidden text-center py-6 space-y-5">
         <div>
-          <h2 class="text-base font-bold text-emerald-950">1-Minute Grounding Visualizer</h2>
-          <p class="text-xs text-slate-600 mt-1">Inhale divine calm, exhale fear and tension.</p>
+          <h2 class="text-base font-semibold text-emerald-950">1-Minute Grounding</h2>
+          <p class="text-xs text-slate-600 mt-1">Inhale divine calm, exhale tension.</p>
         </div>
+        
         <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-emerald-200 to-amber-100 flex items-center justify-center animate-breathe shadow-inner border border-emerald-300">
-          <span class="text-xs font-bold text-emerald-900">Breathe</span>
+          <span class="text-xs font-semibold text-emerald-900">Breathe</span>
         </div>
-        <p class="text-xs text-slate-500 max-w-xs mx-auto">Focus gently on your breath before reviewing any documents or responding to phone calls.</p>
-      </section>
+
+        <!-- Synthesized Singing Bowl / Grounding Bell Sound Component -->
+        <div class="p-3 bg-white border border-emerald-100 rounded-2xl shadow-sm text-center max-w-xs mx-auto space-y-2">
+          <p class="text-xs font-semibold text-emerald-900">🔔 Grounding Tone & Bell</p>
+          <div class="flex justify-center gap-2">
+            <button onclick="playSingingBowl()" class="bg-emerald-800 text-white px-4 py-1.5 rounded-xl text-xs font-medium hover:bg-emerald-900 flex items-center gap-1 mx-auto">
+              <span>▶ Play Sound</span>
+            </button>
+            <button onclick="stopSingingBowl()" class="bg-rose-100 text-rose-800 px-3 py-1.5 rounded-xl text-xs font-medium hover:bg-rose-200">
+              ⏹ Stop
+            </button>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-500 max-w-xs mx-auto">Focus on your breathing to clear your mind before addressing any paperwork.</p>
+      </div>
 
     </main>
   </div>
 
-  <!-- JavaScript Logic -->
   <script>
-    // Tab Navigation Logic
+    // Tab Switching
     function switchTab(tab) {
       ['coach', 'rights', 'quotes', 'checklist', 'timeline', 'breathe'].forEach(t => {
         document.getElementById(`content-${t}`).classList.add('hidden');
-        document.getElementById(`tab-${t}`).className = 'px-2 py-2 rounded-xl hover:bg-emerald-100/50 transition-all';
+        document.getElementById(`tab-${t}`).className = 'px-2 py-2 rounded-xl hover:bg-emerald-100/50';
       });
       document.getElementById(`content-${tab}`).classList.remove('hidden');
-      document.getElementById(`tab-${tab}`).className = 'px-2 py-2 rounded-xl bg-emerald-800 text-white shadow-sm transition-all';
-      
-      if (tab === 'checklist' && !progressChartInstance) {
-        initProgressChart();
+      document.getElementById(`tab-${tab}`).className = 'px-2 py-2 rounded-xl bg-emerald-800 text-white shadow-sm';
+    }
+
+    // Web Audio Synthesizer for Singing Bowl Grounding Tone
+    let audioCtx = null;
+    let mainOsc = null;
+    let overtoneOsc = null;
+    let gainNode = null;
+
+    function playSingingBowl() {
+      if (mainOsc) stopSingingBowl();
+
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContext();
+
+      mainOsc = audioCtx.createOscillator();
+      overtoneOsc = audioCtx.createOscillator();
+      gainNode = audioCtx.createGain();
+
+      // Deep resonant grounding frequency (~432Hz harmonic tone)
+      mainOsc.type = 'sine';
+      mainOsc.frequency.setValueAtTime(216, audioCtx.currentTime); // Subtle low root note
+
+      overtoneOsc.type = 'sine';
+      overtoneOsc.frequency.setValueAtTime(432, audioCtx.currentTime); // Pure bell tone
+
+      // Warm attack and gentle release envelope
+      gainNode.gain.setValueAtTime(0.001, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.4, audioCtx.currentTime + 0.8);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 7.5);
+
+      mainOsc.connect(gainNode);
+      overtoneOsc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
+      mainOsc.start();
+      overtoneOsc.start();
+
+      mainOsc.stop(audioCtx.currentTime + 8);
+      overtoneOsc.stop(audioCtx.currentTime + 8);
+    }
+
+    function stopSingingBowl() {
+      if (gainNode && audioCtx) {
+        gainNode.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+        setTimeout(() => {
+          if (mainOsc) { mainOsc.stop(); mainOsc = null; }
+          if (overtoneOsc) { overtoneOsc.stop(); overtoneOsc = null; }
+          if (audioCtx) { audioCtx.close(); audioCtx = null; }
+        }, 150);
       }
     }
 
-    // Dynamic Quotes System
-    let quotes = [
+    // 100 Quotes and Wisdom Expressions List
+    const quotes = [
       { text: "There is no greater warrior than a mother protecting her child.", author: "N.K. Jemisin" },
       { text: "Truth is powerful and it prevails.", author: "Sojourner Truth" },
-      { text: " You have power over your mind — not outside events. Realize this, and you will find strength.", author: "Marcus Aurelius" },
+      { text: "You have power over your mind — not outside events. Realize this, and you will find strength.", author: "Marcus Aurelius" },
       { text: "Courage doesn't always roar. Sometimes courage is the quiet voice at the end of the day saying, 'I will try again tomorrow.'", author: "Mary Anne Radmacher" },
       { text: "God provides strength when things feel overwhelming. Take one tiny step at a time.", author: "Spiritual Reflection" },
       { text: "Character cannot be developed in ease and quiet. Only through trial can the soul be strengthened.", author: "Helen Keller" },
-      { text: "No matter how bleak a situation appears, it cannot take away our power to take action.", author: "Ryder Carroll" }
+      { text: "No matter how bleak a situation appears, it cannot take away our power to take action.", author: "Ryder Carroll" },
+      { text: "Justice is truth in action.", author: "Benjamin Disraeli" },
+      { text: "Rising every time we fall is where true strength lives.", author: "Nelson Mandela" },
+      { text: "Stand firm. The truth does not require emotional defense; it only requires steady presentation.", author: "Legal Advice Insight" },
+      { text: "Love is patient, love is strong. Hold fast to what is right.", author: "Sacred Proverb" },
+      { text: "Hard days are what make you stronger.", author: "Aly Raisman" },
+      { text: "Peace begins with a deep, steady breath.", author: "Mindfulness Wisdom" },
+      { text: "Light shines brightest in the darkness, and the darkness has not overcome it.", author: "Sacred Scripture" },
+      { text: "Step by step, the longest journey is brought to completion.", author: "Chinese Proverb" },
+      { text: "A quiet heart brings health to the body.", author: "Ancient Wisdom" },
+      { text: "You are stronger than you know, more capable than you ever dreamed.", author: "A.A. Milne" },
+      { text: "Do not fear the storm, for you are learning how to sail your ship.", author: "Louisa May Alcott" },
+      { text: "Clear evidence speaks louder than loud arguments.", author: "Legal Principle" },
+      { text: "When you walk through the fire, you shall not be burned.", author: "Sacred Scripture" },
+      { text: "Faith is taking the first step even when you don't see the whole staircase.", author: "Martin Luther King Jr." },
+      { text: "Be still, and know that truth will come to light.", author: "Spiritual Reflection" },
+      { text: "The truth will set you free, but first it will make you demand facts.", author: "Adapted Wisdom" },
+      { text: "Your love for your children is a fortress no trial can tear down.", author: "Encouragement" },
+      { text: "Patience and persistence perform miracles.", author: "Proverb" },
+      { text: "Focus on what you can control today: one document, one entry, one breath.", author: "Practical Insight" },
+      { text: "Spirit gives power to the faint and increases strength to those who have no might.", author: "Sacred Text" },
+      { text: "Do not let what you cannot do interfere with what you can do.", author: "John Wooden" },
+      { text: "Truth grounds the mind when emotions swell like waves.", author: "Mindfulness Reflection" },
+      { text: "One day at a time, one fact at a time.", author: "Daily Mantra" },
+      { text: "A mother's devotion is a force of nature.", author: "Classic Saying" },
+      { text: "The truth stands on its own foundation without needing to shout.", author: "Legal Wisdom" },
+      { text: "In quietness and confidence shall be your strength.", author: "Sacred Scripture" },
+      { text: "No mountain is moved all at once; it is moved stone by stone.", author: "Proverb" },
+      { text: "Keep calm, hold fast, and let the facts lead the way.", author: "Preparation Principle" },
+      { text: "Hope is a anchor for the soul, firm and secure.", author: "Sacred Proverb" },
+      { text: "Great works are performed not by strength, but by perseverance.", author: "Samuel Johnson" },
+      { text: "You are doing this for your children, and you are doing this for yourself.", author: "Grounding Truth" },
+      { text: "Order and organization turn chaos into clarity.", author: "Practical Wisdom" },
+      { text: "Every small step taken today protects your tomorrow.", author: "Action Reflection" },
+      { text: "Divine grace is sufficient for every moment of need.", author: "Spiritual Assuredness" },
+      { text: "Breathe in peace, exhale fear.", author: "Calm Meditation" },
+      { text: "Facts recorded with care become undeniable truth in court.", author: "Legal Discipline" },
+      { text: "Courage is grace under pressure.", author: "Ernest Hemingway" },
+      { text: "The darkest night produces the brightest stars.", author: "Proverb" },
+      { text: "Rest when you are tired, but never give up on what is right.", author: "Mother's Encouragement" },
+      { text: "Trust the process of systematic preparation.", author: "Legal Mindset" },
+      { text: "Faith moves mountains, but micro-steps clear the road.", author: "Action Faith" },
+      { text: "You have walked through deep waters before and reached solid ground.", author: "Reflection" },
+      { text: "No lie can live forever when brought into the light of facts.", author: "Carlyle" },
+      { text: "Be strong and courageous. Do not be terrified; do not be discouraged.", author: "Sacred Scripture" },
+      { text: "Focus on the next right step.", author: "Simple Truth" },
+      { text: "Small acts of consistency yield massive victories.", author: "Daily Insight" },
+      { text: "Your record of facts is your protection.", author: "Legal Reality" },
+      { text: "Love never fails.", author: "Sacred Text" },
+      { text: "Peace is not the absence of trouble, but the presence of calm in the middle of it.", author: "Mindfulness" },
+      { text: "Wisdom begins with a calm mind.", author: "Ancient Proverb" },
+      { text: "You don't need to explain your heart; you only need to present the record.", author: "Coach Reminder" },
+      { text: "Stand like a rock in a stormy sea.", author: "Stoic Insight" },
+      { text: "Out of difficulties grow miracles.", author: "Jean de La Bruyère" },
+      { text: "Every detail organized today is a shield for your family tomorrow.", author: "Preparation Insight" },
+      { text: "The spirit within you is greater than any challenge before you.", author: "Spiritual Reflection" },
+      { text: "Gentleness and firmness can exist together.", author: "Balanced Wisdom" },
+      { text: "Take a deep breath and begin again.", author: "Daily Reset" },
+      { text: "Truth fears no examination.", author: "Legal Proverb" },
+      { text: "Your kids are worth every small effort you make today.", author: "Mother's Focus" },
+      { text: "When you feel like stopping, remember why you started.", author: "Motivation" },
+      { text: "A steady hand builds a firm defense.", author: "Strategy" },
+      { text: "The Lord will fight for you; you need only to be still.", author: "Sacred Scripture" },
+      { text: "Doubt is natural, but action creates certainty.", author: "Mindset Shift" },
+      { text: "Order creates safety.", author: "Grounding Principle" },
+      { text: "Write down the date, note the time, keep the record.", author: "Legal Discipline" },
+      { text: "You are resilient, capable, and surrounded by divine support.", author: "Affirmation" },
+      { text: "Slow and steady wins the race.", author: "Aesop" },
+      { text: "Truth is light, and light exposes everything.", author: "Proverb" },
+      { text: "Do not let grief steal your momentum.", author: "Action Reminder" },
+      { text: "Serenity comes from accepting what is past and preparing for what is ahead.", author: "Mindfulness" },
+      { text: "Your love is real, your facts are solid, your hope is alive.", author: "Encouragement" },
+      { text: "One micro-task completed is a victory won.", author: "Step by Step" },
+      { text: "Trust in divine timing while keeping your paperwork in order.", author: "Faith & Action" },
+      { text: "Courage is not the absence of fear, but the decision that something else is more important.", author: "Ambrose Redmoon" },
+      { text: "Clear mind, steady heart, solid facts.", author: "Mantra" },
+      { text: "You are not alone in this fight.", author: "Community Reflection" },
+      { text: "The law protects those who present the truth clearly.", author: "Legal Principle" },
+      { text: "Your strength grows in the quiet moments of preparation.", author: "Reflection" },
+      { text: "In quietness lies your greatest power.", author: "Proverb" },
+      { text: "Never underestimate a mother's resolve.", author: "Insight" },
+      { text: "Every fact logged is a step toward resolution.", author: "Timeline Focus" },
+      { text: "Peace in the heart, clarity in the mind.", author: "Calm Mantra" },
+      { text: "Spirit guides the willing, truth protects the innocent.", author: "Sacred Thought" },
+      { text: "Take it one hour at a time.", author: "Gentle Reminder" },
+      { text: "Facts are stubborn things; they do not bend for lies.", author: "John Adams" },
+      { text: "Protect your peace of mind while building your case.", author: "Balance" },
+      { text: "Hope deferred makes the heart sick, but fulfilled truth brings life.", author: "Sacred Proverb" },
+      { text: "Organize today, rest tonight.", author: "Daily Rhythm" },
+      { text: "You are standing on truth, and truth endures.", author: "Final Affirmation" },
+      { text: "Your children's future is the light that guides your steps.", author: "Core Purpose" },
+      { text: "God is your refuge and strength, a very present help in trouble.", author: "Sacred Scripture" },
+      { text: "Deep breath in, steady action forward.", author: "Closing Mantra" }
     ];
+
     let currentQuoteIdx = 0;
+
+    function updateQuoteDisplay() {
+      document.getElementById('quote-text').innerText = `"${quotes[currentQuoteIdx].text}"`;
+      document.getElementById('quote-author').innerText = `— ${quotes[currentQuoteIdx].author}`;
+      document.getElementById('quote-counter').innerText = `Quote ${currentQuoteIdx + 1} of ${quotes.length}`;
+    }
 
     function nextQuote() {
       currentQuoteIdx = (currentQuoteIdx + 1) % quotes.length;
-      document.getElementById('quote-text').innerText = `"${quotes[currentQuoteIdx].text}"`;
-      document.getElementById('quote-author').innerText = `— ${quotes[currentQuoteIdx].author}`;
+      updateQuoteDisplay();
     }
 
-    function fetchMoreQuotes() {
-      const extraQuotes = [
-        { text: "Justice is truth in action.", author: "Benjamin Disraeli" },
-        { text: "Rising every time we fall is where true strength lives.", author: "Nelson Mandela" },
-        { text: "Stand firm. The truth does not require emotional defense; it only requires steady presentation.", author: "Legal Advice Insight" },
-        { text: "Love is patient, love is strong. Hold fast to what is right.", author: "Sacred Proverb" },
-        { text: "Hard days are what make you stronger.", author: "Aly Raisman" }
-      ];
-      quotes = quotes.concat(extraQuotes);
-      const btn = document.getElementById('fetch-btn');
-      btn.innerText = `Expanded (${quotes.length} total)`;
-      btn.disabled = true;
-      btn.classList.add('opacity-50');
-      nextQuote();
+    function prevQuote() {
+      currentQuoteIdx = (currentQuoteIdx - 1 + quotes.length) % quotes.length;
+      updateQuoteDisplay();
     }
 
     // Chat / Coach Logic
@@ -299,7 +385,7 @@
       if(!text) return;
 
       const chat = document.getElementById('chat-messages');
-      chat.innerHTML += `<div class="p-3 bg-emerald-50/90 border border-emerald-100 rounded-2xl text-xs leading-relaxed text-slate-800 font-medium ml-auto max-w-[85%]">${text}</div>`;
+      chat.innerHTML += `<div class="p-3 bg-emerald-50/80 border border-emerald-100 rounded-2xl text-sm leading-relaxed text-slate-800 font-medium ml-auto max-w-[85%]">${text}</div>`;
       input.value = '';
       chat.scrollTop = chat.scrollHeight;
 
@@ -308,21 +394,21 @@
         const lower = text.toLowerCase();
 
         if (lower.includes('stuck') || lower.includes('overwhelmed') || lower.includes('later') || lower.includes('procrastinat') || lower.includes('can\'t do')) {
-          resp = "<strong>Reality Check:</strong> Ashai, take a deep breath. You do not need to convince anyone of your heart right now—your love for your children is already real. But legally, if the facts are not gathered cleanly, the consequences could be severe. You are doing this for your kids and for yourself. Pull out just 1 document or write down 1 date today. That is enough for now.";
+          resp = "<strong>Reality Check:</strong> Ashai, take a deep breath. You do not need to convince anyone of your goodness or your innocence right now—your love for your children is already real. But legally, if the facts are not gathered and presented properly, the consequences could be severe. You are doing this for your kids, and you are doing this for yourself. Pull out just 1 paper or write down 1 date today. That is all.";
         } 
         else if (lower.includes('spirit') || lower.includes('god')) {
-          resp = "Spirit grants clarity and endurance in times of trial. Divine presence supports you, but you must equip your legal team with physical facts and evidence. Let's look at one small detail together.";
+          resp = "Spirit grants clarity and endurance in times of trial. Divine presence supports you, but you must equip your legal team with physical evidence. Let's look at one fact together.";
         } 
-        else if (lower.includes('hripa') || lower.includes('audit') || lower.includes('metadata')) {
-          resp = "Under HRIPA 2002 (NSW), hospital systems maintain unchangeable digital metadata of medical record edits. If gestational age or diagnoses were altered, your lawyer can subpoena the EMR audit trail to reveal the exact staff user ID and timestamp.";
+        else if (lower.includes('hripa') || lower.includes('audit')) {
+          resp = "Under HRIPA 2002 (NSW), hospitals must maintain digital metadata logs of medical record changes. If gestational age or diagnoses were altered, your lawyer can subpoena the EMR audit trail to show exactly who made the edit and when.";
         } 
         else {
-          resp = "You are taking clear, proactive steps. Focus on just one small, objective fact at a time to build your foundation.";
+          resp = "You are taking clear, proactive steps. Focus on just one small, objective fact at a time.";
         }
 
-        chat.innerHTML += `<div class="p-3 bg-white border border-emerald-100 rounded-2xl text-xs leading-relaxed text-slate-700 max-w-[85%] shadow-sm">${resp}</div>`;
+        chat.innerHTML += `<div class="p-3 bg-white border border-emerald-100 rounded-2xl text-sm leading-relaxed text-slate-700 max-w-[85%] shadow-sm">${resp}</div>`;
         chat.scrollTop = chat.scrollHeight;
-      }, 400);
+      }, 500);
     }
 
     // Timeline Persistence (localStorage)
@@ -344,58 +430,19 @@
       const events = JSON.parse(localStorage.getItem('ashai_events') || '[]');
       const container = document.getElementById('timeline-list');
       if (events.length === 0) {
-        container.innerHTML = '<p class="text-slate-400 italic text-center py-2">No events logged yet.</p>';
+        container.innerHTML = '<p class="text-slate-400 italic">No events logged yet.</p>';
         return;
       }
       container.innerHTML = events.map(e => `
         <div class="p-3 bg-white border border-slate-200 rounded-xl shadow-sm">
-          <span class="font-bold text-emerald-950 block">${e.date}</span>
+          <span class="font-semibold text-emerald-900 block">${e.date}</span>
           <p class="text-slate-600 mt-1">${e.desc}</p>
         </div>
       `).join('');
     }
 
-    // Chart.js Setup for Checklist Progress
-    let progressChartInstance = null;
-    let completedSteps = [false, false, false, false];
-
-    function initProgressChart() {
-      const ctx = document.getElementById('progressChart').getContext('2d');
-      progressChartInstance = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Completed', 'Remaining'],
-          datasets: [{
-            data: [0, 4],
-            backgroundColor: ['#047857', '#e2e8f0'],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } }
-          },
-          cutout: '70%'
-        }
-      });
-    }
-
-    function toggleStep(index) {
-      completedSteps[index] = document.getElementById(`chk-${index}`).checked;
-      const doneCount = completedSteps.filter(Boolean).length;
-      const remainingCount = 4 - doneCount;
-
-      if (progressChartInstance) {
-        progressChartInstance.data.datasets[0].data = [doneCount, remainingCount];
-        progressChartInstance.update();
-      }
-    }
-
-    // Initialize initial views
     renderTimeline();
+    updateQuoteDisplay();
   </script>
 </body>
 </html>
-```
